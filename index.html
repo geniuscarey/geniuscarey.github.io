@@ -357,7 +357,7 @@
             <p><a href="https://github.com/orcaman/concurrent-map" target="_blank" rel="external">这个作者</a>实现了一个go的并发map库。</p>
 <p>一般来说，并发map的结构体实现，就是内部放一个map，然后增加一个锁。比如下面的代码。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> ConcurrentMap <span class="keyword">struct</span> &#123;</div><div class="line">	items        <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125;</div><div class="line">	sync.RWMutex <span class="comment">// Read Write mutex, guards access to internal map.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>作者比较巧妙的是引入了分片的概念。将<code>ConcurrentMap</code>实现成了一个数组，每个数组元素才是上述的<br>结构。然后在访问并发map时，首先通过key值哈希出对应的数组元素，然后再赋值。很显然这样能减少锁<br>的冲突。当然额外引入了一点哈希的代码量。但和加锁的代价比，还是好上不少。</p>
+<p>作者比较巧妙的是引入了分片的概念。将<code>ConcurrentMap</code>实现成了一个数组，每个数组元素才是上述的结构。<br>然后在访问并发map时，首先通过key值哈希出对应的数组元素，然后再赋值。很显然这样能减少锁<br>的冲突。当然额外引入了一点哈希的代码量。但和加锁的代价比，还是好上不少。</p>
 <p>不过作者的实现限制了key值的类型为string，使用起来还是有点不便。我打算扩展一下，改成通用的版本。</p>
 
           
