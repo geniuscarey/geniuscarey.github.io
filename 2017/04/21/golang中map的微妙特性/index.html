@@ -93,7 +93,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/21/golang中map的微妙特性/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="先看一段代码123456789101112131415161718type T struct &amp;#123;    num int&amp;#125;func (t T) Print() &amp;#123;    fmt.Println(t.num)&amp;#125;func (t *T) Pprint() &amp;#123;    fmt.Println(t.num)&amp;#125;func main() &amp;#123;">
-<meta property="og:updated_time" content="2017-04-21T15:47:29.000Z">
+<meta property="og:updated_time" content="2017-04-21T15:52:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang中map的微妙特性">
 <meta name="twitter:description" content="先看一段代码123456789101112131415161718type T struct &amp;#123;    num int&amp;#125;func (t T) Print() &amp;#123;    fmt.Println(t.num)&amp;#125;func (t *T) Pprint() &amp;#123;    fmt.Println(t.num)&amp;#125;func main() &amp;#123;">
@@ -372,7 +372,9 @@
 <p>还是刚刚的代码</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeT</span><span class="params">()</span> <span class="title">T</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> T&#123;<span class="number">1</span>&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Pprint</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]T)</div><div class="line">    m[<span class="number">1</span>] = T&#123;<span class="number">2</span>&#125;</div><div class="line">    fmt.Println(m[<span class="number">1</span>].num)</div><div class="line">    m[<span class="number">1</span>].Print()</div><div class="line">    makeT().Print()</div><div class="line">    makeT().Pprint()</div></pre></td></tr></table></figure>
 <p>同样，最后一句是有问题的。当然如果makeT返回的是T类型的指针，也是OK的，因为这时<br>不存在一个提取地址的问题，本身已经是地址了。</p>
-<p>所以，如果map储存的对象，存在指针方法。那map的值只能储存指针了。</p>
+<blockquote>
+<p>如果map储存的对象，需要调用指针方法来更新自身, 那map的值只能储存对象指针了。除此之外<br>map倒是可以储存对象本身。反正不更新自己的话，直接将map索引出来的值缓存一下，再调指针方法<br>也是OK的，只是没法修改map里面储存的对象。</p>
+</blockquote>
 
       
     </div>
