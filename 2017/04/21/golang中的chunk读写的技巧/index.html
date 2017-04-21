@@ -87,16 +87,22 @@
 
 
 
-<meta name="description" content="自我简介菊花厂程序员，奔向34">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
+一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
+1func Copy(dst Writer, src Reader) (written int64, err">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang中的chunk读写的技巧">
+<meta property="og:url" content="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="自我简介菊花厂程序员，奔向34">
-<meta property="og:updated_time" content="2017-04-15T14:12:32.000Z">
+<meta property="og:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
+一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
+1func Copy(dst Writer, src Reader) (written int64, err">
+<meta property="og:updated_time" content="2017-04-21T15:17:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="自我简介菊花厂程序员，奔向34">
+<meta name="twitter:title" content="golang中的chunk读写的技巧">
+<meta name="twitter:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
+一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
+1func Copy(dst Writer, src Reader) (written int64, err">
 
 
 
@@ -124,19 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/"/>
 
 
 
 
 
-  <title>
-  
-
-  
-     | Hexo
-  
-</title>
+  <title> golang中的chunk读写的技巧 | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -161,7 +161,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -276,19 +276,156 @@
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h1 class="post-title" itemprop="name headline"></h1>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/">
 
-</header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Carey Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
 
     
-    
-      <h1 id="自我简介"><a href="#自我简介" class="headerlink" title="自我简介"></a>自我简介</h1><p>菊花厂程序员，奔向34</p>
+      <header class="post-header">
 
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                golang中的chunk读写的技巧
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T23:04:09+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
     
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后<br>再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到<br>另一个文件，同样会存在类似的问题。</p>
+<p>一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供<br>了一个原生的接口来支持</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Copy</span><span class="params">(dst Writer, src Reader)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
+<p>只需要目标实现了一个Writer接口就行了，这个Writer接口是通用的字节写入。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</div><div class="line">        Write(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样目标可以在接口里做很多事情，从最简单的写入文件，到加密等。<br>比如用md5加密某文件<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">f, err := os.Open(<span class="string">"../resources/table.csv"</span>)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    log.Fatalln(<span class="string">"couldn't open file"</span>, err.Error())</div><div class="line">&#125;</div><div class="line"><span class="keyword">defer</span> f.Close()</div><div class="line"></div><div class="line">h := md5.New()</div><div class="line">io.Copy(h, f)</div></pre></td></tr></table></figure></p>
+<p>非常简洁，唯一的缺点是这里的读写buf大小不可控。比如有时候希望写快一些<br>希望一次读取大一些的内容到buf中。</p>
+<p>好在<code>io</code>模块还提供了另一个接口。这个接口用户自己定义buf的大小，并且可以<br>复用buf。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">CopyBuffer</span><span class="params">(dst Writer, src Reader, buf []<span class="keyword">byte</span>)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
+<p>自己写个小程序也体验一下本接口</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/15/go语言中并发map的实现/" rel="next" title="go语言中并发库的实现">
+                <i class="fa fa-chevron-left"></i> go语言中并发库的实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -479,6 +616,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
