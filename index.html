@@ -277,6 +277,148 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中map的微妙特性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Carey Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/golang中map的微妙特性/" itemprop="url">
+                  golang中map的微妙特性
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T23:28:38+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>先看一段代码<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</div><div class="line">    num <span class="keyword">int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Pprint</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]T)</div><div class="line">    m[<span class="number">1</span>] = T&#123;<span class="number">2</span>&#125;</div><div class="line">    fmt.Println(m[<span class="number">1</span>].num)</div><div class="line">    m[<span class="number">1</span>].Print()</div><div class="line">    m[<span class="number">1</span>].Pprint()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>看看有什么问题？很多golang的新手都会困惑，因为最后一句是没法执行的。</p>
+<p>首先回顾一个概念，golang的spec中提到，对于指针作为receiver对象的非接口方法，如果使用一个<code>可寻址</code>的值，则go会自动对该值取地址作为指针，并调用指针的方法。</p>
+<p>当然如果是指针调用非指针的方法，go也会自动解引用然后调用对应的方法。</p>
+<p>那么哪些是可寻址对象呢？</p>
+<ul>
+<li>变量</li>
+<li>指针</li>
+<li>列表的索引值</li>
+<li>可寻址结构体的成员</li>
+<li>可寻址数组的索引值</li>
+</ul>
+<p>这里同样存在让人疑惑的地方，为什么列表的索引值是OK的，但数组不行。<br>这是因为列表是固定的go对象，不同类型的列表只是内部的指向不同而已。</p>
+<p>什么样的数据是不可寻址呢？</p>
+<ul>
+<li>map的值</li>
+<li>函数返回的值</li>
+</ul>
+<p>还是刚刚的代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeT</span><span class="params">()</span> <span class="title">T</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> T&#123;<span class="number">1</span>&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Pprint</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]T)</div><div class="line">    m[<span class="number">1</span>] = T&#123;<span class="number">2</span>&#125;</div><div class="line">    fmt.Println(m[<span class="number">1</span>].num)</div><div class="line">    m[<span class="number">1</span>].Print()</div><div class="line">    makeT().Print()</div><div class="line">    makeT().Pprint()</div></pre></td></tr></table></figure>
+<p>同样，最后一句是有问题的。当然如果makeT返回的是T类型的指针，也是OK的，因为这时<br>不存在一个提取地址的问题，本身已经是地址了。</p>
+<p>所以，如果map储存的对象，存在指针方法。那map的值只能储存指针了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -688,7 +830,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

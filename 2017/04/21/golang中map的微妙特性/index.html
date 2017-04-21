@@ -87,22 +87,16 @@
 
 
 
-<meta name="description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
+<meta name="description" content="先看一段代码123456789101112131415161718type T struct &amp;#123;    num int&amp;#125;func (t T) Print() &amp;#123;    fmt.Println(t.num)&amp;#125;func (t *T) Pprint() &amp;#123;    fmt.Println(t.num)&amp;#125;func main() &amp;#123;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="golang中的chunk读写的技巧">
-<meta property="og:url" content="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/index.html">
+<meta property="og:title" content="golang中map的微妙特性">
+<meta property="og:url" content="http://yoursite.com/2017/04/21/golang中map的微妙特性/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
-<meta property="og:updated_time" content="2017-04-21T15:17:38.000Z">
+<meta property="og:description" content="先看一段代码123456789101112131415161718type T struct &amp;#123;    num int&amp;#125;func (t T) Print() &amp;#123;    fmt.Println(t.num)&amp;#125;func (t *T) Pprint() &amp;#123;    fmt.Println(t.num)&amp;#125;func main() &amp;#123;">
+<meta property="og:updated_time" content="2017-04-21T15:47:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="golang中的chunk读写的技巧">
-<meta name="twitter:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
+<meta name="twitter:title" content="golang中map的微妙特性">
+<meta name="twitter:description" content="先看一段代码123456789101112131415161718type T struct &amp;#123;    num int&amp;#125;func (t T) Print() &amp;#123;    fmt.Println(t.num)&amp;#125;func (t *T) Pprint() &amp;#123;    fmt.Println(t.num)&amp;#125;func main() &amp;#123;">
 
 
 
@@ -130,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/21/golang中map的微妙特性/"/>
 
 
 
 
 
-  <title> golang中的chunk读写的技巧 | Hexo </title>
+  <title> golang中map的微妙特性 | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +279,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中map的微妙特性/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Carey Xu">
@@ -306,7 +300,7 @@
             
             
               
-                golang中的chunk读写的技巧
+                golang中map的微妙特性
               
             
           </h1>
@@ -321,7 +315,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T23:04:09+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T23:28:38+08:00">
                 2017-04-21
               </time>
             
@@ -357,15 +351,28 @@
       
 
       
-        <p>很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后<br>再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到<br>另一个文件，同样会存在类似的问题。</p>
-<p>一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供<br>了一个原生的接口来支持</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Copy</span><span class="params">(dst Writer, src Reader)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
-<p>只需要目标实现了一个Writer接口就行了，这个Writer接口是通用的字节写入。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</div><div class="line">        Write(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样目标可以在接口里做很多事情，从最简单的写入文件，到加密等。<br>比如用md5加密某文件<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">f, err := os.Open(<span class="string">"../resources/table.csv"</span>)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    log.Fatalln(<span class="string">"couldn't open file"</span>, err.Error())</div><div class="line">&#125;</div><div class="line"><span class="keyword">defer</span> f.Close()</div><div class="line"></div><div class="line">h := md5.New()</div><div class="line">io.Copy(h, f)</div></pre></td></tr></table></figure></p>
-<p>非常简洁，唯一的缺点是这里的读写buf大小不可控。比如有时候希望写快一些<br>希望一次读取大一些的内容到buf中。</p>
-<p>好在<code>io</code>模块还提供了另一个接口。这个接口用户自己定义buf的大小，并且可以<br>复用buf。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">CopyBuffer</span><span class="params">(dst Writer, src Reader, buf []<span class="keyword">byte</span>)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
-<p>自己写个小程序也体验一下本接口</p>
+        <p>先看一段代码<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</div><div class="line">    num <span class="keyword">int</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Pprint</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]T)</div><div class="line">    m[<span class="number">1</span>] = T&#123;<span class="number">2</span>&#125;</div><div class="line">    fmt.Println(m[<span class="number">1</span>].num)</div><div class="line">    m[<span class="number">1</span>].Print()</div><div class="line">    m[<span class="number">1</span>].Pprint()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>看看有什么问题？很多golang的新手都会困惑，因为最后一句是没法执行的。</p>
+<p>首先回顾一个概念，golang的spec中提到，对于指针作为receiver对象的非接口方法，如果使用一个<code>可寻址</code>的值，则go会自动对该值取地址作为指针，并调用指针的方法。</p>
+<p>当然如果是指针调用非指针的方法，go也会自动解引用然后调用对应的方法。</p>
+<p>那么哪些是可寻址对象呢？</p>
+<ul>
+<li>变量</li>
+<li>指针</li>
+<li>列表的索引值</li>
+<li>可寻址结构体的成员</li>
+<li>可寻址数组的索引值</li>
+</ul>
+<p>这里同样存在让人疑惑的地方，为什么列表的索引值是OK的，但数组不行。<br>这是因为列表是固定的go对象，不同类型的列表只是内部的指向不同而已。</p>
+<p>什么样的数据是不可寻址呢？</p>
+<ul>
+<li>map的值</li>
+<li>函数返回的值</li>
+</ul>
+<p>还是刚刚的代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">makeT</span><span class="params">()</span> <span class="title">T</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> T&#123;<span class="number">1</span>&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Pprint</span><span class="params">()</span></span> &#123;</div><div class="line">    fmt.Println(t.num)</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">    m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]T)</div><div class="line">    m[<span class="number">1</span>] = T&#123;<span class="number">2</span>&#125;</div><div class="line">    fmt.Println(m[<span class="number">1</span>].num)</div><div class="line">    m[<span class="number">1</span>].Print()</div><div class="line">    makeT().Print()</div><div class="line">    makeT().Pprint()</div></pre></td></tr></table></figure>
+<p>同样，最后一句是有问题的。当然如果makeT返回的是T类型的指针，也是OK的，因为这时<br>不存在一个提取地址的问题，本身已经是地址了。</p>
+<p>所以，如果map储存的对象，存在指针方法。那map的值只能储存指针了。</p>
 
       
     </div>
@@ -402,8 +409,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/15/go语言中并发map的实现/" rel="next" title="go语言中并发库的实现">
-                <i class="fa fa-chevron-left"></i> go语言中并发库的实现
+              <a href="/2017/04/21/golang中的chunk读写的技巧/" rel="next" title="golang中的chunk读写的技巧">
+                <i class="fa fa-chevron-left"></i> golang中的chunk读写的技巧
               </a>
             
           </div>
@@ -411,10 +418,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/21/golang中map的微妙特性/" rel="prev" title="golang中map的微妙特性">
-                golang中map的微妙特性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
