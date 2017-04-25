@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="golang," />
+  <meta name="keywords" content="golang,fsnotify," />
 
 
 
@@ -87,22 +87,25 @@
 
 
 
-<meta name="description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
+<meta name="description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
+cobra其实依赖前两者的实现，实现了比较方便的配置机制。
+其中一个有意思的功能，viper可以监控confi的动态变化。
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="golang中的chunk读写的技巧">
-<meta property="og:url" content="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/index.html">
+<meta property="og:title" content="golang实现文件监控的fsnotify">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/golang实现文件监控的fsnotify/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
-<meta property="og:updated_time" content="2017-04-23T08:36:06.000Z">
+<meta property="og:description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
+cobra其实依赖前两者的实现，实现了比较方便的配置机制。
+其中一个有意思的功能，viper可以监控confi的动态变化。
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
+<meta property="og:updated_time" content="2017-04-25T14:33:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="golang中的chunk读写的技巧">
-<meta name="twitter:description" content="很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到另一个文件，同样会存在类似的问题。
-一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供了一个原生的接口来支持
-1func Copy(dst Writer, src Reader) (written int64, err">
+<meta name="twitter:title" content="golang实现文件监控的fsnotify">
+<meta name="twitter:description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
+cobra其实依赖前两者的实现，实现了比较方便的配置机制。
+其中一个有意思的功能，viper可以监控confi的动态变化。
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
 
 
 
@@ -130,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/25/golang实现文件监控的fsnotify/"/>
 
 
 
 
 
-  <title> golang中的chunk读写的技巧 | Hexo </title>
+  <title> golang实现文件监控的fsnotify | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/golang中的chunk读写的技巧/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/golang实现文件监控的fsnotify/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Carey Xu">
@@ -306,7 +309,7 @@
             
             
               
-                golang中的chunk读写的技巧
+                golang实现文件监控的fsnotify
               
             
           </h1>
@@ -321,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-21T23:04:09+08:00">
-                2017-04-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T22:19:27+08:00">
+                2017-04-25
               </time>
             
 
@@ -331,28 +334,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/golang/" itemprop="url" rel="index">
-                    <span itemprop="name">golang</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -379,15 +360,18 @@
       
 
       
-        <p>很多时候，比如一个很大的文件，如果计算哈希值，简单的将数据从文件读出来之后<br>再算，会非常耗内存。或者更简单，从一个文件中读取内容，修改其中的部分，写到<br>另一个文件，同样会存在类似的问题。</p>
-<p>一个简单的办法是自己做一个缓存，每次读一点，然后写回去。但其实golang已经提供<br>了一个原生的接口来支持</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Copy</span><span class="params">(dst Writer, src Reader)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
-<p>只需要目标实现了一个Writer接口就行了，这个Writer接口是通用的字节写入。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123;</div><div class="line">        Write(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样目标可以在接口里做很多事情，从最简单的写入文件，到加密等。<br>比如用md5加密某文件<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">f, err := os.Open(<span class="string">"../resources/table.csv"</span>)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    log.Fatalln(<span class="string">"couldn't open file"</span>, err.Error())</div><div class="line">&#125;</div><div class="line"><span class="keyword">defer</span> f.Close()</div><div class="line"></div><div class="line">h := md5.New()</div><div class="line">io.Copy(h, f)</div></pre></td></tr></table></figure></p>
-<p>非常简洁，唯一的缺点是这里的读写buf大小不可控。比如有时候希望写快一些<br>希望一次读取大一些的内容到buf中。</p>
-<p>好在<code>io</code>模块还提供了另一个接口。这个接口用户自己定义buf的大小，并且可以<br>复用buf。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">CopyBuffer</span><span class="params">(dst Writer, src Reader, buf []<span class="keyword">byte</span>)</span> <span class="params">(written <span class="keyword">int64</span>, err error)</span></span></div></pre></td></tr></table></figure>
-<p>自己写个小程序也体验一下本接口</p>
+        <p>今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.</p>
+<p>cobra其实依赖前两者的实现，实现了比较方便的配置机制。</p>
+<p>其中一个有意思的功能，viper可以监控confi的动态变化。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">viper.WatchConfig()</div><div class="line">viper.OnConfigChange(<span class="function"><span class="keyword">func</span><span class="params">(e fsnotify.Event)</span></span> &#123;</div><div class="line">    fmt.Println(<span class="string">"Config file changed:"</span>, e.Name)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这个功能可以让程序在处理正确的情况下，实现实时配置响应，依赖fsnotify这个库的<br>实现。</p>
+<p>fsnotify是对inotify的go语言封装。借助于go的方便的channel/goroutine机制，还是<br>蛮好用的。</p>
+<p>碰巧fsnotify和内核的fsnotify机制同名。后者只是一个文件系统通知的后端, 不提供用户态接口，提供用户态点接口的还是inotify机制.</p>
+<blockquote>
+<p>Fsnotify is a backend for filesystem notification. Fsnotify itself does not provide any userspace interface but does provide the basis needed for other notification schemes such as dnotify, inotify and fanotify (this last notification interface, will be included in future releases). In fact, in this release dnotify and inotify have been rewritten in top of fsnotify, removing at the same time the ugly and complex code from those systems. Fsnotify provides a mechanism for “groups” to register for some set of filesystem events and to then deliver those events to those groups for processing, and the locking is much simpler. Fsnotify has other benefits, like shrinking the size of an inode.</p>
+</blockquote>
+<p>使用fsnotify非常简单, 下面是官方的例子</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"log"</span></div><div class="line"></div><div class="line">	<span class="string">"github.com/fsnotify/fsnotify"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">ExampleNewWatcher</span><span class="params">()</span></span> &#123;</div><div class="line">	watcher, err := fsnotify.NewWatcher()</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> watcher.Close()</div><div class="line"></div><div class="line">	done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">bool</span>)</div><div class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</div><div class="line">		<span class="keyword">for</span> &#123;</div><div class="line">			<span class="keyword">select</span> &#123;</div><div class="line">			<span class="keyword">case</span> event := &lt;-watcher.Events:</div><div class="line">				log.Println(<span class="string">"event:"</span>, event)</div><div class="line">				<span class="keyword">if</span> event.Op&amp;fsnotify.Write == fsnotify.Write &#123;</div><div class="line">					log.Println(<span class="string">"modified file:"</span>, event.Name)</div><div class="line">				&#125;</div><div class="line">			<span class="keyword">case</span> err := &lt;-watcher.Errors:</div><div class="line">				log.Println(<span class="string">"error:"</span>, err)</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;()</div><div class="line"></div><div class="line">	err = watcher.Add(<span class="string">"/tmp/foo"</span>)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line">	&lt;-done</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -419,6 +403,8 @@
           
             <a href="/tags/golang/" rel="tag"># golang</a>
           
+            <a href="/tags/fsnotify/" rel="tag"># fsnotify</a>
+          
         </div>
       
 
@@ -430,8 +416,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/15/go语言中并发map的实现/" rel="next" title="go语言中并发库的实现">
-                <i class="fa fa-chevron-left"></i> go语言中并发库的实现
+              <a href="/2017/04/21/golang中map的微妙特性/" rel="next" title="golang中map的微妙特性">
+                <i class="fa fa-chevron-left"></i> golang中map的微妙特性
               </a>
             
           </div>
@@ -439,10 +425,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/21/golang中map的微妙特性/" rel="prev" title="golang中map的微妙特性">
-                golang中map的微妙特性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
