@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="fanotify,inotify," />
 
 
 
@@ -87,12 +87,37 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/categories/golang/index.html">
+<meta name="description" content="在golang的包fsnotify的支持列表上看，目前还不支持fanotify，fanotify是inotify的替换框架。在linux内核2.6.37之后引入。
+和inotify相比，fanotify的优势在于：
+
+inotify的监控句柄数是每个文件/文件夹一个，数量太多。fanotify支持全局和挂载点的监控。
+
+fanotify支持访问控制, 允许对其他app的访问进行权限控制。
+
+支持不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fanotify和inotify的区别">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/fanotify和inotify的区别/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在golang的包fsnotify的支持列表上看，目前还不支持fanotify，fanotify是inotify的替换框架。在linux内核2.6.37之后引入。
+和inotify相比，fanotify的优势在于：
+
+inotify的监控句柄数是每个文件/文件夹一个，数量太多。fanotify支持全局和挂载点的监控。
+
+fanotify支持访问控制, 允许对其他app的访问进行权限控制。
+
+支持不">
+<meta property="og:updated_time" content="2017-04-25T14:52:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="fanotify和inotify的区别">
+<meta name="twitter:description" content="在golang的包fsnotify的支持列表上看，目前还不支持fanotify，fanotify是inotify的替换框架。在linux内核2.6.37之后引入。
+和inotify相比，fanotify的优势在于：
+
+inotify的监控句柄数是每个文件/文件夹一个，数量太多。fanotify支持全局和挂载点的监控。
+
+fanotify支持访问控制, 允许对其他app的访问进行权限控制。
+
+支持不">
 
 
 
@@ -120,13 +145,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/golang/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/25/fanotify和inotify的区别/"/>
 
 
 
 
 
-  <title> 分类: golang | Hexo </title>
+  <title> fanotify和inotify的区别 | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -151,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -265,103 +290,171 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        golang
-        <small>分类</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/04/21/golang中map的微妙特性/" itemprop="url">
-              
-                <span itemprop="name">golang中map的微妙特性</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-21T23:28:38+08:00"
-              content="2017-04-21" >
-          04-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/04/21/golang中的chunk读写的技巧/" itemprop="url">
-              
-                <span itemprop="name">golang中的chunk读写的技巧</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-21T23:04:09+08:00"
-              content="2017-04-21" >
-          04-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/04/15/go语言中并发map的实现/" itemprop="url">
-              
-                <span itemprop="name">go语言中并发库的实现</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-15T22:11:57+08:00"
-              content="2017-04-15" >
-          04-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/fanotify和inotify的区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Carey Xu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                fanotify和inotify的区别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T22:43:42+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在golang的包fsnotify的支持列表上看，目前还不支持fanotify，fanotify是inotify的替换框架。在linux内核2.6.37之后引入。</p>
+<p>和inotify相比，fanotify的优势在于：</p>
+<ol>
+<li><p>inotify的监控句柄数是每个文件/文件夹一个，数量太多。fanotify支持全局和挂载点的监控。</p>
+</li>
+<li><p>fanotify支持访问控制, 允许对其他app的访问进行权限控制。</p>
+</li>
+<li><p>支持不同的通知级别。</p>
+</li>
+<li><p>支持传递操作的pid，避免循环通知。</p>
+</li>
+</ol>
+<p>这么多优势，那fanotify显然是有劣势的，否则fsnotify估计已经支持了。<br>就是fanotify支持的事件数量比较少。</p>
+<p>本文章系IBM知识库里<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-fanotify/index.html" target="_blank" rel="external">这篇文章</a>的简单总结。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/fanotify/" rel="tag"># fanotify</a>
+          
+            <a href="/tags/inotify/" rel="tag"># inotify</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/25/golang实现文件监控的fsnotify/" rel="next" title="golang实现文件监控的fsnotify">
+                <i class="fa fa-chevron-left"></i> golang实现文件监控的fsnotify
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -369,6 +462,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -565,6 +662,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
