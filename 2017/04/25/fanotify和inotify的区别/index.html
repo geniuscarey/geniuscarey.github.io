@@ -107,7 +107,7 @@ inotify的监控句柄数是每个文件/文件夹一个，数量太多。fanoti
 fanotify支持访问控制, 允许对其他app的访问进行权限控制。
 
 支持不">
-<meta property="og:updated_time" content="2017-04-25T14:52:17.000Z">
+<meta property="og:updated_time" content="2017-04-25T14:59:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fanotify和inotify的区别">
 <meta name="twitter:description" content="在golang的包fsnotify的支持列表上看，目前还不支持fanotify，fanotify是inotify的替换框架。在linux内核2.6.37之后引入。
@@ -384,7 +384,11 @@ fanotify支持访问控制, 允许对其他app的访问进行权限控制。
 <li><p>支持传递操作的pid，避免循环通知。</p>
 </li>
 </ol>
-<p>这么多优势，那fanotify显然是有劣势的，否则fsnotify估计已经支持了。<br>就是fanotify支持的事件数量比较少。</p>
+<p>这么多优势，那fanotify显然是有劣势的，否则fsnotify估计已经支持了。<br>就是fanotify支持的事件数量比较少。<br>不过从去年10月的<a href="https://lwn.net/Articles/703204/" target="_blank" rel="external">lwn文章</a>来看，可能很快也都能追上了。</p>
+<p>目前不支持的事件还挺多的, 个人猜测是fanotify是为杀毒软件而生。从支持<br>访问控制可以看出来。对杀毒软件来说，只要不open/write/read，估计都不care。<br>所以create/delete这些事件一直都不支持</p>
+<blockquote>
+<p>fanotify: add support for create/attrib/rename/delete events</p>
+</blockquote>
 <p>本文章系IBM知识库里<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-fanotify/index.html" target="_blank" rel="external">这篇文章</a>的简单总结。</p>
 
       
