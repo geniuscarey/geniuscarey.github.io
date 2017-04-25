@@ -89,23 +89,23 @@
 
 <meta name="description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
 cobra其实依赖前两者的实现，实现了比较方便的配置机制。
-其中一个有意思的功能，viper可以监控confi的动态变化。
-1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
+其中一个有意思的功能，viper可以监控config的动态变化。不过是否实现了重新加载还有待研究
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    f">
 <meta property="og:type" content="article">
 <meta property="og:title" content="golang实现文件监控的fsnotify">
 <meta property="og:url" content="http://yoursite.com/2017/04/25/golang实现文件监控的fsnotify/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
 cobra其实依赖前两者的实现，实现了比较方便的配置机制。
-其中一个有意思的功能，viper可以监控confi的动态变化。
-1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
-<meta property="og:updated_time" content="2017-04-25T14:33:25.000Z">
+其中一个有意思的功能，viper可以监控config的动态变化。不过是否实现了重新加载还有待研究
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    f">
+<meta property="og:updated_time" content="2017-04-25T14:36:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang实现文件监控的fsnotify">
 <meta name="twitter:description" content="今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.
 cobra其实依赖前两者的实现，实现了比较方便的配置机制。
-其中一个有意思的功能，viper可以监控confi的动态变化。
-1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    fmt.Println(&quot;Confi">
+其中一个有意思的功能，viper可以监控config的动态变化。不过是否实现了重新加载还有待研究
+1234viper.WatchConfig()viper.OnConfigChange(func(e fsnotify.Event) &amp;#123;    f">
 
 
 
@@ -362,11 +362,11 @@ cobra其实依赖前两者的实现，实现了比较方便的配置机制。
       
         <p>今天看了一下spf13的三个命令行工具相关的库viper,pflags,cobra.</p>
 <p>cobra其实依赖前两者的实现，实现了比较方便的配置机制。</p>
-<p>其中一个有意思的功能，viper可以监控confi的动态变化。</p>
+<p>其中一个有意思的功能，viper可以监控config的动态变化。不过是否实现了<br>重新加载还有待研究</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">viper.WatchConfig()</div><div class="line">viper.OnConfigChange(<span class="function"><span class="keyword">func</span><span class="params">(e fsnotify.Event)</span></span> &#123;</div><div class="line">    fmt.Println(<span class="string">"Config file changed:"</span>, e.Name)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <p>这个功能可以让程序在处理正确的情况下，实现实时配置响应，依赖fsnotify这个库的<br>实现。</p>
-<p>fsnotify是对inotify的go语言封装。借助于go的方便的channel/goroutine机制，还是<br>蛮好用的。</p>
-<p>碰巧fsnotify和内核的fsnotify机制同名。后者只是一个文件系统通知的后端, 不提供用户态接口，提供用户态点接口的还是inotify机制.</p>
+<p>fsnotify是对inotify的go语言封装。借助于go方便的channel/goroutine机制，还是<br>蛮好用的。</p>
+<p>碰巧fsnotify和内核的fsnotify机制同名。后者只是一个文件系统通知的后端, 不提供用户态接口，提供用户接口的还是inotify/fanotify机制.</p>
 <blockquote>
 <p>Fsnotify is a backend for filesystem notification. Fsnotify itself does not provide any userspace interface but does provide the basis needed for other notification schemes such as dnotify, inotify and fanotify (this last notification interface, will be included in future releases). In fact, in this release dnotify and inotify have been rewritten in top of fsnotify, removing at the same time the ugly and complex code from those systems. Fsnotify provides a mechanism for “groups” to register for some set of filesystem events and to then deliver those events to those groups for processing, and the locking is much simpler. Fsnotify has other benefits, like shrinking the size of an inode.</p>
 </blockquote>
